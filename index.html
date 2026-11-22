@@ -832,6 +832,9 @@ body.has-banner { padding-top:38px; }
       <div class="nav-item" onclick="showPage('inventario',this)" data-page="inventario">
         <span class="nav-icon">📦</span><span class="nav-label">Inventario</span>
       </div>
+      <div class="nav-item" onclick="showPage('produccion',this)" data-page="produccion">
+        <span class="nav-icon">🥖</span><span class="nav-label">Producción</span>
+      </div>
       <div class="nav-item" onclick="showPage('historial',this)" data-page="historial">
         <span class="nav-icon">📋</span><span class="nav-label">Historial</span>
       </div>
@@ -1264,6 +1267,94 @@ body.has-banner { padding-top:38px; }
         </div>
       </div>
 
+
+      <!-- ═══ PRODUCCIÓN (RECETAS) ═══ -->
+      <div id="page-produccion" style="display:none">
+        <style>
+          .prod-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+          .prod-tab { padding: 8px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg3); color: var(--text2); font-size: 12.5px; font-weight: 700; cursor: pointer; font-family: inherit; }
+          .prod-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+          .prod-ing-row { display: grid; grid-template-columns: 1fr 110px 38px; gap: 8px; margin-bottom: 8px; align-items: center; }
+        </style>
+        <div class="flex justify-between items-center mb-4" style="flex-wrap:wrap;gap:10px">
+          <div>
+            <div class="section-title">🥖 Producción</div>
+            <div class="section-sub" style="margin-bottom:0">Recetas: convierte materia prima en productos terminados, con costo real y merma</div>
+          </div>
+        </div>
+        <div class="prod-tabs">
+          <button class="prod-tab active" data-tab="recetas" onclick="prodCambiarTab('recetas')">📋 Recetas</button>
+          <button class="prod-tab" data-tab="producir" onclick="prodCambiarTab('producir')">⚡ Producir</button>
+          <button class="prod-tab" data-tab="historial" onclick="prodCambiarTab('historial')">🗓 Historial</button>
+        </div>
+        <div id="prodTab-recetas" class="prod-tab-content">
+          <div class="grid-4 mb-4" id="prodStats"></div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">📋 Recetas</span><button class="btn btn-primary" onclick="abrirNuevaReceta()">+ Nueva Receta</button></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Receta</th><th>Producto terminado</th><th>Rinde</th><th>Costo/lote</th><th>Costo/unidad</th><th>Merma</th><th>Acciones</th></tr></thead>
+                <tbody id="prodRecetasTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="prodTab-producir" class="prod-tab-content" style="display:none">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header"><span class="card-title">⚡ Registrar producción</span></div>
+              <div class="card-body" style="padding:16px">
+                <div class="form-group"><label class="form-label">Receta</label><select id="prod-receta" class="form-select" onchange="prodActualizarVista()"></select></div>
+                <div class="form-group"><label class="form-label">Lotes a producir</label><input type="number" id="prod-lotes" class="form-input" min="1" step="1" value="1" oninput="prodActualizarVista()"></div>
+                <div id="prodResumen" class="fiscal-info-box" style="margin-top:6px"></div>
+                <button class="btn btn-primary" onclick="producir()" style="width:100%">🥖 PRODUCIR</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><span class="card-title">📦 Movimiento de inventario</span></div>
+              <div class="card-body" style="padding:16px">
+                <div id="prodMovimiento" class="fiscal-info-box" style="margin:0"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="prodTab-historial" class="prod-tab-content" style="display:none">
+          <div class="card">
+            <div class="card-header"><span class="card-title">🗓 Producciones registradas</span></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Fecha</th><th>Receta</th><th>Lotes</th><th>Unidades</th><th>Costo total</th><th>Costo/unidad</th></tr></thead>
+                <tbody id="prodHistorialTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- MODAL RECETA -->
+        <div class="modal-overlay" id="modalReceta" style="display:none">
+          <div class="modal" style="max-width:520px">
+            <div class="modal-header"><span class="modal-title" id="modalRecetaTitle">Nueva Receta</span><button class="btn-close" onclick="closeModal('modalReceta')">✕</button></div>
+            <div class="modal-body">
+              <input type="hidden" id="rec-id">
+              <div class="form-group"><label class="form-label">Nombre de la receta *</label><input type="text" id="rec-nombre" class="form-input" placeholder="Ej: Pan campesino"></div>
+              <div class="grid-2">
+                <div class="form-group"><label class="form-label">Producto terminado (inventario) *</label><select id="rec-producto" class="form-select"></select></div>
+                <div class="form-group"><label class="form-label">Rinde (unid. por lote)</label><input type="number" id="rec-rendimiento" class="form-input" min="1" step="1" value="1"></div>
+              </div>
+              <div class="form-group"><label class="form-label">Merma % <span style="font-weight:400;color:var(--text2);font-size:11px">— desperdicio de producción</span></label><input type="number" id="rec-merma" class="form-input" min="0" step="0.5" value="0" oninput="prodActualizarCostoReceta()"></div>
+              <div class="form-group">
+                <label class="form-label">Ingredientes (materia prima del inventario)</label>
+                <div id="recIngredientes"></div>
+                <button class="btn" onclick="prodAddIngrediente()" style="margin-top:4px">+ Agregar ingrediente</button>
+              </div>
+              <div class="fiscal-info-box" id="recCostoVista" style="margin-bottom:0"></div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-ghost" onclick="closeModal('modalReceta')">Cancelar</button>
+              <button class="btn btn-primary" onclick="guardarReceta()">💾 Guardar Receta</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- ═══ LIBRO FISCAL SENIAT ═══ -->
       <div id="page-fiscal" style="display:none">
@@ -2898,7 +2989,7 @@ function showPage(page, el) {
     historial:'Historial de Ventas', devoluciones:'Devoluciones',
     caja:'Gestión de Caja', clientes:'Clientes y Fiados',
     reportes:'Reportes', configuracion:'Configuración', proveedores:'Proveedores',
-    ia:'Asistente IA', fiscal:'Libro Fiscal'
+    ia:'Asistente IA', fiscal:'Libro Fiscal', produccion:'Producción'
   };
   stext('topbarTitle', titles[page] || page);
   STATE.currentPage = page;
@@ -2910,6 +3001,7 @@ function showPage(page, el) {
   if (page === 'clientes') renderClientes();
   if (page === 'reportes') renderReportes();
   if (page === 'fiscal') renderFiscalPage();
+  if (page === 'produccion') renderProduccion();
   if (page === 'devoluciones') renderDevolucionesPage();
   if (page === 'caja') renderCajaPage();
   if (page === 'proveedores') renderProveedoresPage();
@@ -9251,6 +9343,250 @@ function fiscalExportarCSV() {
 function fiscalImprimir() {
   showPage('fiscal');
   setTimeout(function () { window.print(); }, 400);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PRODUCCIÓN — recetas: materia prima → producto terminado, con costo y merma
+// (100% aditivo: escribe solo las llaves nuevas 'recetas' y 'producciones')
+// ═══════════════════════════════════════════════════════════════════════════
+function prodCambiarTab(tab) {
+  document.querySelectorAll('#page-produccion .prod-tab-content').forEach(function (d) {
+    d.style.display = d.id === 'prodTab-' + tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('#page-produccion .prod-tab').forEach(function (b) {
+    b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+  });
+}
+function prodGetRecetas() { return DB.get('recetas') || []; }
+function prodGetProducciones() { return DB.get('producciones') || []; }
+function prodProds() { return DB.get('productos') || []; }
+
+function prodCostoLote(r) {
+  var prods = prodProds();
+  var bruto = 0;
+  (r.ingredientes || []).forEach(function (ing) {
+    var p = prods.find(function (x) { return x.id === ing.productoId; });
+    if (p) bruto += (p.costo || 0) * ing.cantidad;
+  });
+  var merma = (r.mermaPct || 0) / 100;
+  return { bruto: bruto, total: bruto * (1 + merma) };
+}
+
+function prodLeerIngredientes() {
+  var out = [];
+  document.querySelectorAll('#recIngredientes .prod-ing-row').forEach(function (row) {
+    var sel = row.querySelector('.prod-ing-prod');
+    var cant = row.querySelector('.prod-ing-cant');
+    if (sel && cant) out.push({ productoId: parseInt(sel.value), cantidad: parseFloat(cant.value) || 0 });
+  });
+  return out;
+}
+
+function prodAddIngrediente(selId, cant) {
+  var prods = prodProds();
+  if (!prods.length) return;
+  var div = document.createElement('div');
+  div.className = 'prod-ing-row';
+  var opts = prods.map(function (p) {
+    return '<option value="' + p.id + '">' + fEscHTML(p.nombre) + ' ($' + (p.costo || 0).toFixed(2) + '/' + (p.unidad || 'und') + ')</option>';
+  }).join('');
+  div.innerHTML = '<select class="form-select prod-ing-prod">' + opts + '</select>' +
+    '<input type="number" class="form-input prod-ing-cant" min="0.001" step="0.001" placeholder="Cant." value="' + (cant || 1) + '">' +
+    '<button class="btn" onclick="this.parentElement.remove();prodActualizarCostoReceta();" title="Quitar">✕</button>';
+  document.getElementById('recIngredientes').appendChild(div);
+  div.querySelector('.prod-ing-prod').value = selId || (prods[0] && prods[0].id);
+  div.querySelectorAll('select,input').forEach(function (el) { el.addEventListener('input', prodActualizarCostoReceta); });
+}
+
+function prodActualizarCostoReceta() {
+  var r = { ingredientes: prodLeerIngredientes(), mermaPct: parseFloat(document.getElementById('rec-merma').value) || 0 };
+  var c = prodCostoLote(r);
+  var rend = Math.max(1, parseFloat(document.getElementById('rec-rendimiento').value) || 1);
+  document.getElementById('recCostoVista').innerHTML =
+    '💰 <strong>Costo del lote: ' + fMoney(c.total) + '</strong> (insumos ' + fMoney(c.bruto) + ' + merma) · ' +
+    '<strong>Costo por unidad: ' + fMoney(c.total / rend) + '</strong>';
+}
+
+function abrirNuevaReceta() {
+  if (!prodProds().length) return showToast('Agrega productos al inventario primero', 'warn');
+  document.getElementById('rec-id').value = '';
+  document.getElementById('rec-nombre').value = '';
+  document.getElementById('rec-rendimiento').value = '1';
+  document.getElementById('rec-merma').value = '0';
+  document.getElementById('recIngredientes').innerHTML = '';
+  prodAddIngrediente();
+  prodActualizarCostoReceta();
+  stext('modalRecetaTitle', 'Nueva Receta');
+  openModal('modalReceta');
+}
+
+function editarReceta(id) {
+  var r = prodGetRecetas().find(function (x) { return x.id === id; });
+  if (!r) return;
+  document.getElementById('rec-id').value = r.id;
+  document.getElementById('rec-nombre').value = r.nombre || '';
+  document.getElementById('rec-rendimiento').value = r.rendimiento || 1;
+  document.getElementById('rec-merma').value = r.mermaPct || 0;
+  document.getElementById('recIngredientes').innerHTML = '';
+  (r.ingredientes || []).forEach(function (ing) { prodAddIngrediente(ing.productoId, ing.cantidad); });
+  if (!(r.ingredientes || []).length) prodAddIngrediente();
+  prodActualizarCostoReceta();
+  stext('modalRecetaTitle', 'Editar Receta');
+  openModal('modalReceta');
+}
+
+function guardarReceta() {
+  var nombre = document.getElementById('rec-nombre').value.trim();
+  if (!nombre) return showToast('Ponle nombre a la receta', 'error');
+  var productoId = parseInt(document.getElementById('rec-producto').value);
+  if (!productoId) return showToast('Selecciona el producto terminado', 'error');
+  var rendimiento = Math.max(1, parseFloat(document.getElementById('rec-rendimiento').value) || 1);
+  var ingredientes = prodLeerIngredientes().filter(function (i) { return i.cantidad > 0; });
+  if (!ingredientes.length) return showToast('Agrega al menos un ingrediente', 'error');
+  var recetas = prodGetRecetas();
+  var id = document.getElementById('rec-id').value;
+  var data = { nombre: nombre, productoId: productoId, rendimiento: rendimiento,
+    mermaPct: parseFloat(document.getElementById('rec-merma').value) || 0, ingredientes: ingredientes };
+  if (id) {
+    var r = recetas.find(function (x) { return x.id === id; });
+    if (r) Object.keys(data).forEach(function (k) { r[k] = data[k]; });
+  } else {
+    data.id = 'rec_' + Date.now();
+    recetas.push(data);
+  }
+  DB.set('recetas', recetas);
+  closeModal('modalReceta');
+  showToast('✅ Receta guardada', 'success');
+  renderProduccion();
+}
+
+function borrarReceta(id) {
+  if (!confirm('¿Eliminar esta receta? El historial de producción se conserva.')) return;
+  DB.set('recetas', prodGetRecetas().filter(function (x) { return x.id !== id; }));
+  renderProduccion();
+}
+
+function prodSeleccionarYProducir(id) {
+  prodCambiarTab('producir');
+  document.getElementById('prod-receta').value = id;
+  prodActualizarVista();
+}
+
+function prodActualizarVista() {
+  var recetas = prodGetRecetas();
+  var sel = document.getElementById('prod-receta');
+  var r = recetas.find(function (x) { return x.id === sel.value; });
+  var lotes = Math.max(1, parseInt(document.getElementById('prod-lotes').value) || 1);
+  if (!r) {
+    document.getElementById('prodResumen').innerHTML = 'Crea una receta en la pestaña 📋 Recetas para poder producir.';
+    document.getElementById('prodMovimiento').innerHTML = '—';
+    return;
+  }
+  var c = prodCostoLote(r);
+  var rend = Math.max(1, r.rendimiento || 1);
+  var unidades = rend * lotes;
+  document.getElementById('prodResumen').innerHTML =
+    '<strong>' + fEscHTML(r.nombre) + '</strong> × ' + lotes + ' lote(s)<br>' +
+    'Unidades producidas: <strong>' + unidades + '</strong><br>' +
+    'Costo total: <strong>' + fMoney(c.total * lotes) + '</strong><br>' +
+    'Costo por unidad: <strong>' + fMoney(c.total / rend) + '</strong>';
+  var prods = prodProds();
+  var lines = (r.ingredientes || []).map(function (ing) {
+    var p = prods.find(function (x) { return x.id === ing.productoId; });
+    if (!p) return '⚠️ un ingrediente ya no existe en el inventario';
+    var necesario = ing.cantidad * lotes;
+    var ok = (p.stock || 0) >= necesario;
+    return (ok ? '✅' : '❌') + ' ' + fEscHTML(p.nombre) + ': −' + necesario + ' ' + (p.unidad || 'und') +
+      ' <span style="color:var(--text3)">(hay ' + (p.stock || 0) + ')</span>';
+  });
+  var pt = prods.find(function (x) { return x.id === r.productoId; });
+  lines.push('➕ ' + (pt ? fEscHTML(pt.nombre) : '⚠️ producto terminado') + ': <strong>+' + unidades + ' unidades</strong>');
+  document.getElementById('prodMovimiento').innerHTML = lines.join('<br>');
+}
+
+function producir() {
+  var recetas = prodGetRecetas();
+  var sel = document.getElementById('prod-receta');
+  var r = recetas.find(function (x) { return x.id === sel.value; });
+  if (!r) return showToast('Selecciona una receta', 'warn');
+  var lotes = Math.max(1, parseInt(document.getElementById('prod-lotes').value) || 1);
+  var prods = prodProds();
+  var faltan = [];
+  (r.ingredientes || []).forEach(function (ing) {
+    var p = prods.find(function (x) { return x.id === ing.productoId; });
+    if (!p) faltan.push('ingrediente eliminado');
+    else if ((p.stock || 0) < ing.cantidad * lotes) faltan.push(p.nombre + ' (necesita ' + ing.cantidad * lotes + ', hay ' + (p.stock || 0) + ')');
+  });
+  if (faltan.length) return showToast('❌ Sin stock: ' + faltan.join(' · '), 'error');
+  (r.ingredientes || []).forEach(function (ing) {
+    var p = prods.find(function (x) { return x.id === ing.productoId; });
+    p.stock = Math.max(0, (p.stock || 0) - ing.cantidad * lotes);
+  });
+  var pt = prods.find(function (x) { return x.id === r.productoId; });
+  var rend = Math.max(1, r.rendimiento || 1);
+  if (pt) pt.stock = (pt.stock || 0) + rend * lotes;
+  DB.set('productos', prods);
+  var c = prodCostoLote(r);
+  var regs = prodGetProducciones();
+  regs.push({ id: Date.now(), fecha: new Date().toISOString(), recetaId: r.id, recetaNombre: r.nombre,
+    lotes: lotes, unidades: rend * lotes, costoTotal: c.total * lotes, costoUnitario: c.total / rend });
+  DB.set('producciones', regs);
+  showToast('🥖 Producción registrada: +' + rend * lotes + ' unidades de ' + r.nombre, 'success');
+  if (typeof renderInventario === 'function') renderInventario();
+  renderProduccion();
+  prodCambiarTab('historial');
+}
+
+function renderProduccion() {
+  var recetas = prodGetRecetas();
+  var prods = prodProds();
+  var producciones = prodGetProducciones().slice().sort(function (a, b) { return (a.fecha || '') < (b.fecha || '') ? 1 : -1; });
+  var mesActual = new Date().toISOString().substring(0, 7);
+  var prodMes = producciones.filter(function (p) { return (p.fecha || '').substring(0, 7) === mesActual; });
+  var costoMes = prodMes.reduce(function (s, p) { return s + (p.costoTotal || 0); }, 0);
+  var unidadesMes = prodMes.reduce(function (s, p) { return s + (p.unidades || 0); }, 0);
+
+  var st = document.getElementById('prodStats');
+  if (st) st.innerHTML =
+    '<div class="stat-card" style="--c1:var(--neon);--c2:var(--accent)"><div class="stat-label">📋 Recetas</div><div class="stat-val">' + recetas.length + '</div></div>' +
+    '<div class="stat-card" style="--c1:var(--accent);--c2:var(--neonb)"><div class="stat-label">🥖 Producciones (mes)</div><div class="stat-val">' + prodMes.length + '</div></div>' +
+    '<div class="stat-card" style="--c1:var(--success);--c2:var(--neon)"><div class="stat-label">📦 Unidades (mes)</div><div class="stat-val" style="color:var(--success)">' + unidadesMes + '</div></div>' +
+    '<div class="stat-card" style="--c1:var(--neonb);--c2:var(--accent)"><div class="stat-label">💰 Costo producción (mes)</div><div class="stat-val">' + fMoney(costoMes) + '</div></div>';
+
+  var tb = document.getElementById('prodRecetasTable');
+  if (tb) tb.innerHTML = recetas.length ? recetas.map(function (r) {
+    var c = prodCostoLote(r);
+    var pt = prods.find(function (x) { return x.id === r.productoId; });
+    return '<tr><td>' + fEscHTML(r.nombre) + '</td><td>' + (pt ? fEscHTML(pt.nombre) : '⚠️ sin producto') + '</td><td>' +
+      (r.rendimiento || 1) + '</td><td>' + fMoney(c.total) + '</td><td><strong>' +
+      fMoney(c.total / Math.max(1, r.rendimiento || 1)) + '</strong></td><td>' + (r.mermaPct || 0) + '%</td><td>' +
+      '<button class="btn" onclick="editarReceta(\'' + r.id + '\')" title="Editar">✏️</button> ' +
+      '<button class="btn" onclick="prodSeleccionarYProducir(\'' + r.id + '\')" title="Producir">⚡</button> ' +
+      '<button class="btn" onclick="borrarReceta(\'' + r.id + '\')" title="Eliminar">🗑️</button></td></tr>';
+  }).join('') : '<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:20px">Sin recetas aún — crea la primera con "+ Nueva Receta"</td></tr>';
+
+  var sel = document.getElementById('prod-receta');
+  if (sel) {
+    var prev = sel.value;
+    sel.innerHTML = recetas.length
+      ? recetas.map(function (r) { return '<option value="' + r.id + '">' + fEscHTML(r.nombre) + '</option>'; }).join('')
+      : '<option value="">— sin recetas —</option>';
+    if (prev && recetas.find(function (x) { return x.id === prev; })) sel.value = prev;
+  }
+  var sp = document.getElementById('rec-producto');
+  if (sp) {
+    var prevP = sp.value;
+    sp.innerHTML = prods.map(function (p) { return '<option value="' + p.id + '">' + fEscHTML(p.nombre) + '</option>'; }).join('');
+    if (prevP && prods.find(function (x) { return x.id == prevP; })) sp.value = prevP;
+  }
+
+  var th = document.getElementById('prodHistorialTable');
+  if (th) th.innerHTML = producciones.length ? producciones.map(function (p) {
+    return '<tr><td>' + (p.fecha || '').substring(0, 10) + '</td><td>' + fEscHTML(p.recetaNombre || '') + '</td><td>' +
+      p.lotes + '</td><td>' + p.unidades + '</td><td>' + fMoney(p.costoTotal) + '</td><td>' + fMoney(p.costoUnitario) + '</td></tr>';
+  }).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:20px">Aún no hay producciones registradas</td></tr>';
+
+  prodActualizarVista();
 }
 
 </script>
