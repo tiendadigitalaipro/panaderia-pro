@@ -2283,8 +2283,8 @@ body.has-banner { padding-top:38px; }
 
 <script type="text/javascript">var _adminUnlocked = false;
 var _dc=function(a){return a.map(function(c){return String.fromCharCode(c);}).join('');};
-var APP_VERSION='v9.1';
-var APP_BUILD='20260524';
+var APP_VERSION='v9.2';
+var APP_BUILD='20261122';
 
 
 function selPago(metodo) {
@@ -7745,13 +7745,15 @@ function checkVersionUpdate() {
   var banner = document.createElement('div');
   banner.id = 'update-banner';
   var novedades = [
-    '⚖️ Botón Pesaje en el punto de venta',
-    '🤖 Módulo Asistente IA con análisis inteligente',
-    '⏸️ Pausar y recuperar ventas',
-    '🔒 Seguridad de licencias mejorada'
+    '🥖 Módulo Producción — recetas con costo real y merma',
+    '📊 Libro Fiscal SENIAT completo — Ventas, Compras, Diario Art.32 y Balance',
+    '🧮 IVA e IGTF 3% calculados automáticamente',
+    '🧾 RIF de proveedores en cada compra',
+    '🤝 Cobros de fiados registrados para tu contador',
+    '📤 Todo exporta a PDF o Excel — declara sin sacar cuentas'
   ].map(function(n){ return '<li>'+n+'</li>'; }).join('');
   banner.innerHTML = '<span style="display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap;">'
-    + '<strong>🚀 Bodega Pro '+APP_VERSION+' instalado</strong>'
+    + '<strong>🚀 Panadería Pro '+APP_VERSION+' instalado</strong>'
     + '<span style="font-weight:400;font-size:12px;opacity:0.9">— haz clic en "Ver novedades" para conocer los cambios</span>'
     + '</span>'
     + '<div style="display:flex;gap:8px;flex-shrink:0">'
@@ -7766,15 +7768,16 @@ function iaVerNovedades() {
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;';
   modal.innerHTML = '<div style="background:var(--bg2);border-radius:14px;padding:24px;max-width:420px;width:100%;border:1px solid var(--border)">'
     + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">'
-    + '<h3 style="margin:0;font-size:17px;">🚀 Novedades — Bodega Pro '+APP_VERSION+'</h3>'
+    + '<h3 style="margin:0;font-size:17px;">🚀 Novedades — Panadería Pro '+APP_VERSION+'</h3>'
     + '<button onclick="this.closest(\'[style*=fixed]\').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text2)">✕</button>'
     + '</div>'
     + '<ul style="margin:0;padding-left:20px;line-height:2.2;font-size:13px;color:var(--text1)">'
-    + '<li>⚖️ <strong>Botón Pesaje</strong> en el Punto de Venta</li>'
-    + '<li>🤖 <strong>Asistente IA</strong> con análisis de inventario, ventas y deudores</li>'
-    + '<li>⏸️ <strong>Pausar / Recuperar ventas</strong> en el carrito</li>'
-    + '<li>🔒 <strong>Seguridad mejorada</strong> — secretos de licencias ofuscados</li>'
-    + '<li>🛒 Carrito más alto (5-6 artículos visibles)</li>'
+    + '<li>🥖 <strong>Módulo Producción</strong> — convierte materia prima en producto terminado: recetas con costo real y merma, control de insumos e historial de lotes</li>'
+    + '<li>📊 <strong>Libro Fiscal SENIAT</strong> — Libro de Ventas, Compras, Diario (Art.32 C.Com), Mayor analítico y Balance de Comprobación</li>'
+    + '<li>🧮 <strong>IVA e IGTF 3%</strong> calculados automáticamente en cada operación</li>'
+    + '<li>🧾 <strong>RIF de proveedores</strong> registrado en cada compra</li>'
+    + '<li>🤝 <strong>Cobros de fiados</strong> ahora quedan como evento contable</li>'
+    + '<li>📤 <strong>Exporta PDF o Excel</strong> y entrégalo a tu contador — organiza tus declaraciones sin sacar cuentas</li>'
     + '<li>🔔 Notificación automática de actualizaciones</li>'
     + '</ul>'
     + '<button onclick="this.closest(\'[style*=fixed]\').remove()" class="btn btn-primary" style="width:100%;margin-top:18px;">¡Entendido!</button>'
