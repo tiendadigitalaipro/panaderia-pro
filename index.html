@@ -848,7 +848,7 @@ body.has-banner { padding-top:38px; }
         <span class="nav-icon">💵</span><span class="nav-label">Avances</span>
       </div>
       <div class="nav-item" onclick="showPage('clientes',this)" data-page="clientes">
-        <span class="nav-icon">👥</span><span class="nav-label">Clientes / Fiados</span>
+        <span class="nav-icon">👥</span><span class="nav-label">Clientes / Créditos</span>
       </div>
       <div class="nav-item" onclick="showPage('reportes',this)" data-page="reportes">
         <span class="nav-icon">📈</span><span class="nav-label">Reportes</span>
@@ -1233,7 +1233,7 @@ body.has-banner { padding-top:38px; }
       <div id="page-clientes" style="display:none">
         <div class="flex justify-between items-center mb-4">
           <div>
-            <div class="section-title">Clientes y Fiados</div>
+            <div class="section-title">Clientes y Créditos</div>
             <div class="section-sub" style="margin-bottom:0">Control de deudas y créditos</div>
           </div>
           <button class="btn btn-primary" onclick="openAddCliente()">+ Nuevo Cliente</button>
@@ -1692,7 +1692,7 @@ body.has-banner { padding-top:38px; }
                 </select>
               </div>
               <div style="font-size:11px;color:var(--text2);margin-bottom:14px;line-height:1.6;background:rgba(255,255,255,0.03);padding:10px;border-radius:8px">
-                💡 La app debe estar abierta a esa hora. El respaldo incluye <strong>inventario, clientes, ventas, fiados y caja</strong>. Se descarga automáticamente en tu dispositivo.
+                💡 La app debe estar abierta a esa hora. El respaldo incluye <strong>inventario, clientes, ventas, créditos y caja</strong>. Se descarga automáticamente en tu dispositivo.
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap">
                 <button class="btn btn-primary btn-sm" onclick="saveBackupConfig()">💾 Guardar Hora</button>
@@ -1701,7 +1701,7 @@ body.has-banner { padding-top:38px; }
                 <input type="file" id="inputRestaurarBackup" accept=".json" style="display:none" onchange="restaurarBackup(this)">
               </div>
               <div style="font-size:10px;color:var(--warn);margin-top:8px;line-height:1.5">
-                ⚠️ Restaurar reemplaza TODO lo que hay ahora (inventario, clientes, ventas, fiados, caja) con lo del archivo. Úsalo solo si perdiste tus datos.
+                ⚠️ Restaurar reemplaza TODO lo que hay ahora (inventario, clientes, ventas, créditos, caja) con lo del archivo. Úsalo solo si perdiste tus datos.
               </div>
               <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px">
                 <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px;letter-spacing:0.5px">📋 HISTORIAL DE RESPALDOS</div>
@@ -2191,7 +2191,7 @@ body.has-banner { padding-top:38px; }
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">Límite de Fiado ($)</label>
+        <label class="form-label">Límite de Crédito ($)</label>
         <input type="number" id="cli-limite" class="form-input" step="0.01" placeholder="50.00">
       </div>
       <div class="form-group">
@@ -2210,7 +2210,7 @@ body.has-banner { padding-top:38px; }
 <div class="modal-overlay" id="modalFiado">
   <div class="modal" style="max-width:460px">
     <div class="modal-header">
-      <span class="modal-title" id="modalFiadoTitle">Fiado</span>
+      <span class="modal-title" id="modalFiadoTitle">Crédito</span>
       <button class="btn-close" onclick="closeModal('modalFiado')">✕</button>
     </div>
     <div class="modal-body" id="modalFiadoBody"></div>
@@ -2283,8 +2283,8 @@ body.has-banner { padding-top:38px; }
 
 <script type="text/javascript">var _adminUnlocked = false;
 var _dc=function(a){return a.map(function(c){return String.fromCharCode(c);}).join('');};
-var APP_VERSION='v9.2';
-var APP_BUILD='20261122';
+var APP_VERSION='v9.2.1';
+var APP_BUILD='20261122b';
 
 
 function selPago(metodo) {
@@ -2424,7 +2424,7 @@ const PAISES = {
       { id:'bybit',         label:'Bybit Pay',        icon:'⚡', currency:'USD' },
       { id:'apolo',         label:'Apolo Pay',        icon:'🚀', currency:'USD' },
       { id:'biopago',       label:'Bio Pago',         icon:'🟢', currency:'LOCAL' },
-      { id:'fiado',         label:'Fiado',            icon:'📝', currency:'LOCAL' },
+      { id:'fiado',         label:'Crédito',            icon:'📝', currency:'LOCAL' },
       { id:'mixto',         label:'Pago Mixto',       icon:'🔀', currency:'MIX' },
     ],
   },
@@ -2448,7 +2448,7 @@ const PAISES = {
       { id:'bancolombia',    label:'Bancolombia',     icon:'🟡', currency:'LOCAL' },
       { id:'transferencia',  label:'Transferencia',   icon:'🔄', currency:'LOCAL' },
       { id:'wompi',          label:'Wompi',           icon:'💚', currency:'LOCAL' },
-      { id:'fiado',          label:'Fiado',           icon:'📝', currency:'LOCAL' },
+      { id:'fiado',          label:'Crédito',           icon:'📝', currency:'LOCAL' },
       { id:'mixto',          label:'Pago Mixto',      icon:'🔀', currency:'MIX' },
     ],
   },
@@ -2471,7 +2471,7 @@ const PAISES = {
       { id:'plin',           label:'Plin',            icon:'💙', currency:'LOCAL' },
       { id:'transferencia',  label:'Transferencia',   icon:'🔄', currency:'LOCAL' },
       { id:'visa',           label:'Visa/MC',         icon:'💳', currency:'LOCAL' },
-      { id:'fiado',          label:'Fiado',           icon:'📝', currency:'LOCAL' },
+      { id:'fiado',          label:'Crédito',           icon:'📝', currency:'LOCAL' },
       { id:'mixto',          label:'Pago Mixto',      icon:'🔀', currency:'MIX' },
     ],
   },
@@ -2491,7 +2491,7 @@ const PAISES = {
       { id:'efectivo_usd',   label:'Efectivo $',      icon:'💵', currency:'USD' },
       { id:'transferencia',  label:'Transferencia',   icon:'🔄', currency:'USD' },
       { id:'deuna',          label:'De Una',          icon:'🟢', currency:'USD' },
-      { id:'fiado',          label:'Fiado',           icon:'📝', currency:'USD' },
+      { id:'fiado',          label:'Crédito',           icon:'📝', currency:'USD' },
       { id:'mixto',          label:'Pago Mixto',      icon:'🔀', currency:'MIX' },
     ],
   },
@@ -2512,7 +2512,7 @@ const PAISES = {
       { id:'efectivo_local', label:'Efectivo Bs.',    icon:'💴', currency:'LOCAL' },
       { id:'transferencia',  label:'Transferencia',   icon:'🔄', currency:'LOCAL' },
       { id:'tigo_money',     label:'Tigo Money',      icon:'🔵', currency:'LOCAL' },
-      { id:'fiado',          label:'Fiado',           icon:'📝', currency:'LOCAL' },
+      { id:'fiado',          label:'Crédito',           icon:'📝', currency:'LOCAL' },
       { id:'mixto',          label:'Pago Mixto',      icon:'🔀', currency:'MIX' },
     ],
   },
@@ -2532,7 +2532,7 @@ const PAISES = {
       { id:'efectivo_usd',   label:'Efectivo $',      icon:'💵', currency:'USD' },
       { id:'transferencia',  label:'Transferencia',   icon:'🔄', currency:'USD' },
       { id:'yappy',          label:'Yappy',           icon:'🟡', currency:'USD' },
-      { id:'fiado',          label:'Fiado',           icon:'📝', currency:'USD' },
+      { id:'fiado',          label:'Crédito',           icon:'📝', currency:'USD' },
       { id:'mixto',          label:'Pago Mixto',      icon:'🔀', currency:'MIX' },
     ],
   },
@@ -2553,7 +2553,7 @@ const PAISES = {
       { id:'efectivo_local', label:'Efectivo RD$',    icon:'💴', currency:'LOCAL' },
       { id:'transferencia',  label:'Transferencia',   icon:'🔄', currency:'LOCAL' },
       { id:'card',           label:'Tarjeta',         icon:'💳', currency:'LOCAL' },
-      { id:'fiado',          label:'Fiado',           icon:'📝', currency:'LOCAL' },
+      { id:'fiado',          label:'Crédito',           icon:'📝', currency:'LOCAL' },
       { id:'mixto',          label:'Pago Mixto',      icon:'🔀', currency:'MIX' },
     ],
   },
@@ -2593,7 +2593,7 @@ const PAYMENT_METHODS = [
   { id: 'bybit',         label: 'Bybit Pay',           icon: '⚡', currency: 'USD' },
   { id: 'apolo',         label: 'Apolo Pay',           icon: '🚀', currency: 'USD' },
   { id: 'mixto',         label: 'Pago Mixto',          icon: '🔀', currency: 'MIX' },
-  { id: 'fiado',         label: 'Fiado',               icon: '📝', currency: 'BS'  },
+  { id: 'fiado',         label: 'Crédito',               icon: '📝', currency: 'BS'  },
   { id: 'biopago',      label: 'Bio Pago',          icon: '🟢', currency: 'BS'  },
   { id: 'paguelofacil', label: 'Pagar con Tarjeta', icon: '💳', currency: 'USD' },
 ];
@@ -2609,6 +2609,14 @@ const CAT_ICONS = {
 
 // ─── INIT ─────────────────────────────────────────────────────
 window.onload = function() {
+
+  // Migracion v9.2: metodo 'Fiado' pasa a llamarse 'Crédito' en ventas historicas
+  try {
+    var _vs = DB.get('ventas') || [];
+    var _migro = false;
+    _vs.forEach(function(v){ if (v.metodo === 'Fiado') { v.metodo = 'Crédito'; _migro = true; } });
+    if (_migro) DB.set('ventas', _vs);
+  } catch(e){}
 
   // funciones expuestas en window al final del script
 
@@ -2987,7 +2995,7 @@ function showPage(page, el) {
   const titles = {
     dashboard:'Dashboard', pos:'Punto de Venta', inventario:'Inventario',
     historial:'Historial de Ventas', devoluciones:'Devoluciones',
-    caja:'Gestión de Caja', clientes:'Clientes y Fiados',
+    caja:'Gestión de Caja', clientes:'Clientes y Créditos',
     reportes:'Reportes', configuracion:'Configuración', proveedores:'Proveedores',
     ia:'Asistente IA', fiscal:'Libro Fiscal', produccion:'Producción'
   };
@@ -3037,10 +3045,15 @@ function renderDashboard() {
   const totalHoy = ventasHoy.reduce((s, v) => s + v.totalUSD, 0);
   const totalMes  = ventasMes.reduce((s, v) => s + v.totalUSD, 0);
   const gananciasHoy = ventasHoy.reduce((s, v) => {
-    return s + v.items.reduce((ss, it) => {
+    var gBruta = v.items.reduce((ss, it) => {
       const p = prods.find(p => p.id === it.productoId);
       return ss + (p ? (it.precio - p.costo) * it.qty : 0);
     }, 0);
+    var gDev = (v.itemsDevueltos || []).reduce((ss, d) => {
+      const p = prods.find(p => p.id === d.productoId);
+      return ss + (p ? d.subtotal - p.costo * d.qty : 0);
+    }, 0);
+    return s + (gBruta - gDev);
   }, 0);
 
   document.getElementById('statsGrid').innerHTML =
@@ -3637,8 +3650,8 @@ function confirmarVenta() {
   const total = STATE.cart.reduce((s,i) => s + (i.subtotal||0), 0);
   const clienteId = parseInt(document.getElementById('cobro-cliente').value) || null;
   const notas = document.getElementById('cobro-notas').value;
-  if (STATE.payMethod === 'Fiado' && !clienteId) {
-    showToast('⚠️ Selecciona un cliente para registrar el fiado','warn');
+  if (STATE.payMethod === 'Crédito' && !clienteId) {
+    showToast('⚠️ Selecciona un cliente para registrar el crédito','warn');
     return;
   }
 
@@ -3690,7 +3703,7 @@ function confirmarVenta() {
   DB.set('productos', prods);
 
   // Fiado: agregar deuda
-  if (STATE.payMethod === 'Fiado' && clienteId) {
+  if (STATE.payMethod === 'Crédito' && clienteId) {
     const clientes = DB.get('clientes') || [];
     const cli = clientes.find(c => c.id === clienteId);
     if (cli) { cli.deuda = (cli.deuda || 0) + total; cli.ultimaVenta = new Date().toISOString(); }
@@ -3701,7 +3714,7 @@ function confirmarVenta() {
   var metodoPago = STATE.payMethod || '';
   var esEfectivoUSD = metodoPago === 'Efectivo $';
   var esEfectivoBs  = metodoPago === 'Efectivo Bs';
-  var esFiado       = metodoPago === 'Fiado';
+  var esFiado       = metodoPago === 'Crédito';
   var tipoMov       = esFiado ? null : 'entrada';
   var tipoMetodo    = esEfectivoUSD ? 'Efectivo $' : esEfectivoBs ? 'Efectivo Bs' : 'Electrónico';
 
@@ -3745,15 +3758,22 @@ function showRecibo(venta) {
   var simb = STATE.simboloLocal || 'Bs';
   var logoHtml = fc.logo ? '<div style="text-align:center;margin-bottom:6px"><img src="'+fc.logo+'" style="max-width:120px;max-height:40px"></div>' : '';
   var rifHtml  = (fc.rif||cfg.rif) ? '<div style="font-size:10px">RIF: '+(fc.rif||cfg.rif)+'</div>' : '';
+  var _devQty = {};
+  (venta.itemsDevueltos||[]).forEach(function(d){ _devQty[d.productoId]=(_devQty[d.productoId]||0)+d.qty; });
   var itemsHtml = venta.items.map(function(it){
+    var _qd = _devQty[it.productoId]||0;
+    var _qm = it.qty - _qd;
+    if (_qm <= 0) return '';
+    var _sm = it.precio * _qm;
     return '<div style="font-size:12px;padding:2px 0">'
       + '<div style="display:flex;justify-content:space-between">'
-      +   '<span>'+it.nombre+'</span><span>$'+it.subtotal.toFixed(2)+'</span></div>'
-      + '<div style="font-size:10px;color:#555">'+it.qty+' x $'+it.precio.toFixed(2)+' c/u</div>'
+      +   '<span>'+it.nombre+'</span><span>$'+_sm.toFixed(2)+'</span></div>'
+      + '<div style="font-size:10px;color:#555">'+_qm+' x $'+it.precio.toFixed(2)+' c/u'+(_qd>0?' · ('+_qd+' devuelto)':'')+'</div>'
       + '</div>';
   }).join('');
+  if (!itemsHtml) itemsHtml = '<div style="font-size:11px;text-align:center;color:#555">(todos los productos fueron devueltos)</div>';
   var clienteHtml = '';
-  if (venta.metodo === 'Fiado' && venta.cliente) {
+  if (venta.metodo === 'Crédito' && venta.cliente) {
     var _cli = (DB.get('clientes') || []).find(function(c){ return c.id === venta.cliente; });
     if (_cli) {
       clienteHtml = '<div style="font-size:11px"><strong>Cliente:</strong> '+_cli.nombre+'</div>'
@@ -3774,6 +3794,7 @@ function showRecibo(venta) {
     + '<div style="text-align:center;font-size:11px">'+new Date(venta.fecha).toLocaleString('es-VE')+'</div>'
     + '<div style="border-top:1px solid #000;margin:6px 0"></div>'
     + '<div style="text-align:center;font-size:11px">Recibo #'+String(venta.id).slice(-6)+'</div>'
+    + (venta.devuelta ? '<div style="text-align:center;font-size:11px;font-weight:900;border:1px solid #000;margin:4px 0;padding:2px">★ VENTA DEVUELTA — VER NOTA DE CREDITO ★</div>' : (venta.devueltaParcial ? '<div style="text-align:center;font-size:10px;border:1px dashed #000;margin:4px 0;padding:2px">Devolucion parcial aplicada</div>' : ''))
     + '<div style="border-top:1px dashed #000;margin:6px 0"></div>'
     + clienteHtml
     + itemsHtml
@@ -3783,6 +3804,7 @@ function showRecibo(venta) {
     + '<div style="display:flex;justify-content:space-between;font-size:12px">'
     +   '<span>TOTAL '+simb+'</span><span>'+simb+' '+fmt(venta.totalBs||0)+'</span></div>'
     + '<div style="border-top:1px dashed #000;margin:6px 0"></div>'
+    + ((venta.itemsDevueltos&&venta.itemsDevueltos.length) ? '<div style="font-size:10px;color:#555">Devuelto: '+venta.itemsDevueltos.map(function(d){return d.qty+'x '+d.nombre;}).join(' · ')+'</div><div style="border-top:1px dashed #000;margin:6px 0"></div>' : '')
     + '<div style="text-align:center;font-size:11px">Metodo: '+venta.metodo+'</div>'
     + '<div style="text-align:center;font-size:11px;margin-top:4px">'+(fc.mensajePie||'Gracias por su compra!')+'</div>'
     + '</div>';
@@ -4426,7 +4448,7 @@ function renderClientes() {
   var el = document.getElementById('clienteStats');
   if (el) el.innerHTML =
     '<div class="stat-card" style="--c1:var(--accent);--c2:var(--neonb)"><div class="stat-label">Total Clientes</div><div class="stat-val accent-glow">' + clientes.length + '</div></div>' +
-    '<div class="stat-card" style="--c1:var(--warn);--c2:var(--danger)"><div class="stat-label">Con Fiado</div><div class="stat-val" style="color:var(--warn)">' + conDeuda + '</div></div>' +
+    '<div class="stat-card" style="--c1:var(--warn);--c2:var(--danger)"><div class="stat-label">Con Crédito</div><div class="stat-val" style="color:var(--warn)">' + conDeuda + '</div></div>' +
     '<div class="stat-card" style="--c1:var(--danger);--c2:var(--warn)"><div class="stat-label">Deuda Total</div><div class="stat-val" style="color:var(--danger)">$' + totalDeuda.toFixed(2) + '</div></div>';
 
   var tbody = document.getElementById('clienteTable');
@@ -4438,7 +4460,7 @@ function renderClientes() {
   function _fila(c) {
     var deuda = c.deuda || 0;
     var bc = deuda > (c.limite||50) ? 'badge-red' : deuda > 0 ? 'badge-yellow' : 'badge-green';
-    var bt = deuda > (c.limite||50) ? 'Límite excedido' : deuda > 0 ? 'Con fiado' : 'Al día';
+    var bt = deuda > (c.limite||50) ? 'Límite excedido' : deuda > 0 ? 'Con crédito' : 'Al día';
     return '<tr>' +
       '<td><div style="font-weight:600">' + c.nombre + '</div><div style="font-size:11px;color:var(--text2)">' + (c.cedula||'') + '</div></td>' +
       '<td>' + (c.telefono||'—') + '</td>' +
@@ -4447,11 +4469,11 @@ function renderClientes() {
       '<td><span class="badge ' + bc + '">' + bt + '</span></td>' +
       '<td><div style="display:flex;gap:6px">' +
         '<button class="btn btn-sm btn-outline" onclick="editCliente(' + c.id + ')">✏️</button>' +
-        '<button class="btn btn-sm btn-neon" onclick="verFiado(' + c.id + ')">💳 Fiado</button>' +
+        '<button class="btn btn-sm btn-neon" onclick="verFiado(' + c.id + ')">💳 Crédito</button>' +
         '<button class="btn btn-sm btn-danger" onclick="deleteCliente(' + c.id + ')">🗑️</button>' +
       '</div></td></tr>';
   }
-  var _vacio = _verTodos ? 'Sin clientes registrados' : 'Sin fiados activos';
+  var _vacio = _verTodos ? 'Sin clientes registrados' : 'Sin créditos activos';
   var _rows = _lista.map(_fila).join('') || ('<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text2)">' + _vacio + '</td></tr>');
   if (!_verTodos && _alDia.length > 0) {
     _rows += '<tr><td colspan="6" style="text-align:center;padding:8px;border-top:1px solid var(--border)">' +
@@ -4460,7 +4482,7 @@ function renderClientes() {
   } else if (_verTodos) {
     _rows += '<tr><td colspan="6" style="text-align:center;padding:8px;border-top:1px solid var(--border)">' +
       '<button class="btn btn-ghost btn-sm" style="font-size:11px" onclick="window._clientesVerTodos=false;renderClientes()">' +
-      '🔍 Mostrar solo fiados activos</button></td></tr>';
+      '🔍 Mostrar solo créditos activos</button></td></tr>';
   }
   tbody.innerHTML = _rows;
 }
@@ -4529,7 +4551,7 @@ function verFiado(id) {
   var c = (DB.get('clientes') || []).find(function(x){ return x.id === id; });
   if (!c) return;
   var ventas = (DB.get('ventas') || []).filter(function(v){ return v.cliente === id; });
-  stext('modalFiadoTitle', 'Fiado — ' + c.nombre);
+  stext('modalFiadoTitle', 'Crédito — ' + c.nombre);
   document.getElementById('modalFiadoBody').innerHTML =
     '<div class="alert ' + ((c.deuda||0) > 0 ? 'alert-warn' : 'alert-success') + '">' +
       '<strong>Deuda actual: $' + (c.deuda||0).toFixed(2) + '</strong> · Límite: $' + c.limite +
@@ -4584,10 +4606,15 @@ function renderReportes() {
   var totalHoy = ventasHoy.reduce(function(s,v){ return s+v.totalUSD; },0);
   var totalMes = ventasMes.reduce(function(s,v){ return s+v.totalUSD; },0);
   var ganancia = ventasMes.reduce(function(s,v){
-    return s + v.items.reduce(function(ss,it){
+    var gBruta = v.items.reduce(function(ss,it){
       var p = prods.find(function(p){ return p.id===it.productoId; });
       return ss + (p ? (it.precio - p.costo) * it.qty : 0);
     },0);
+    var gDev = (v.itemsDevueltos||[]).reduce(function(ss,d){
+      var p = prods.find(function(p){ return p.id===d.productoId; });
+      return ss + (p ? d.subtotal - p.costo * d.qty : 0);
+    },0);
+    return s + (gBruta - gDev);
   },0);
 
   var el = document.getElementById('reporteStats');
@@ -5523,21 +5550,28 @@ function imprimirReciboTermico(venta) {
   var nombreMax = esP58 ? 18 : 22;
   var logoHtml = fc.logo?'<img src="'+fc.logo+'" style="max-width:'+(esP58?'40mm':'60mm')+';max-height:22mm;display:block;margin:0 auto 4px">':'';
   var rifHtml  = (fc.rif||cfg.rif)?'<div style="text-align:center;font-size:'+subFontSize+'">RIF: '+(fc.rif||cfg.rif)+'</div>':'';
+  var _devQtyT = {};
+  (venta.itemsDevueltos||[]).forEach(function(d){ _devQtyT[d.productoId]=(_devQtyT[d.productoId]||0)+d.qty; });
   var lineas = venta.items.map(function(it){
+    var _qd = _devQtyT[it.productoId]||0;
+    var _qm = it.qty - _qd;
+    if (_qm <= 0) return '';
+    var _sm = it.precio * _qm;
     return '<div style="padding:2px 0">'
       +'<div style="display:flex;justify-content:space-between">'
       +'<span>'+it.nombre.substring(0,nombreMax)+'</span>'
-      +'<span>$'+(it.subtotal||0).toFixed(2)+'</span></div>'
-      +'<div style="font-size:'+subFontSize+';color:#333">'+it.qty+' x $'+(it.precio||0).toFixed(2)+' c/u</div>'
+      +'<span>$'+_sm.toFixed(2)+'</span></div>'
+      +'<div style="font-size:'+subFontSize+';color:#333">'+_qm+' x $'+(it.precio||0).toFixed(2)+' c/u'+(_qd>0?' · ('+_qd+' dev.)':'')+'</div>'
       +'</div>';
   }).join('');
+  if (!lineas) lineas = '<div style="text-align:center;font-size:'+subFontSize+';color:#333">(todos los productos devueltos)</div>';
   var bsLine = fc.mostrarBs!==false
     ?'<div style="display:flex;justify-content:space-between"><span>TOTAL '+(STATE.simboloLocal||'Bs')+'</span><span>'+(STATE.simboloLocal||'Bs')+' '+fmt((venta.totalBs||venta.totalUSD*tasa))+'</span></div>':'' ;
   var tasaLine = fc.mostrarTasa?'<div style="text-align:center;font-size:'+subFontSize+'">Tasa: '+tasa+' '+(STATE.simboloLocal||'Bs')+'/$1</div>':'';
   var ctrl = fc.numControlActivo?_siguienteNumControl():null;
   var ctrlHtml = ctrl?'<div style="text-align:center;font-size:'+subFontSize+'">Control: N-'+ctrl+'</div>':'';
   var clienteHtml = '';
-  if (venta.metodo === 'Fiado' && venta.cliente) {
+  if (venta.metodo === 'Crédito' && venta.cliente) {
     var _cli = (DB.get('clientes') || []).find(function(c){ return c.id === venta.cliente; });
     if (_cli) {
       clienteHtml = '<div><strong>Cliente:</strong> '+_cli.nombre+'</div>'
@@ -5750,7 +5784,7 @@ function confirmarDevolucion() {
     totalUSD:montoDevuelto,totalBs:montoDevuelto*(STATE.tasa||649),
     motivo:motivo,notas:notas,esTotal:esTotal,items:itemsDevueltos});
   DB.set('notasCredito',notas_c);
-  if(v.metodo==='Fiado'&&v.cliente){
+  if(v.metodo==='Crédito'&&v.cliente){
     var clientes=DB.get('clientes')||[];
     var cli=clientes.find(function(cc){return cc.id===v.cliente;});
     if(cli) cli.deuda=parseFloat(Math.max(0,(cli.deuda||0)-montoDevuelto).toFixed(2));
@@ -7334,7 +7368,7 @@ function restaurarBackup(input) {
       input.value = '';
       return;
     }
-    if (!window.confirm('Esto va a BORRAR todo lo que hay ahora mismo (inventario, clientes, ventas, fiados, caja) y lo va a reemplazar con el respaldo del ' + (data.backupDate ? new Date(data.backupDate).toLocaleString('es-VE') : 'archivo elegido') + '.\n\n¿Confirmas que quieres restaurar?')) {
+    if (!window.confirm('Esto va a BORRAR todo lo que hay ahora mismo (inventario, clientes, ventas, créditos, caja) y lo va a reemplazar con el respaldo del ' + (data.backupDate ? new Date(data.backupDate).toLocaleString('es-VE') : 'archivo elegido') + '.\n\n¿Confirmas que quieres restaurar?')) {
       input.value = '';
       return;
     }
@@ -7745,12 +7779,10 @@ function checkVersionUpdate() {
   var banner = document.createElement('div');
   banner.id = 'update-banner';
   var novedades = [
-    '🥖 Módulo Producción — recetas con costo real y merma',
-    '📊 Libro Fiscal SENIAT completo — Ventas, Compras, Diario Art.32 y Balance',
-    '🧮 IVA e IGTF 3% calculados automáticamente',
-    '🧾 RIF de proveedores en cada compra',
-    '🤝 Cobros de fiados registrados para tu contador',
-    '📤 Todo exporta a PDF o Excel — declara sin sacar cuentas'
+    '↩️ Devoluciones corregidas: la ganancia y el recibo ahora descuentan lo devuelto',
+    '🧾 Reimprimir factura muestra solo los productos que quedaron',
+    '💳 El módulo Fiado ahora se llama Crédito (mismo funcionamiento)',
+    '📊 Libro Fiscal SENIAT disponible en Finanzas'
   ].map(function(n){ return '<li>'+n+'</li>'; }).join('');
   banner.innerHTML = '<span style="display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap;">'
     + '<strong>🚀 Panadería Pro '+APP_VERSION+' instalado</strong>'
@@ -7772,12 +7804,10 @@ function iaVerNovedades() {
     + '<button onclick="this.closest(\'[style*=fixed]\').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text2)">✕</button>'
     + '</div>'
     + '<ul style="margin:0;padding-left:20px;line-height:2.2;font-size:13px;color:var(--text1)">'
-    + '<li>🥖 <strong>Módulo Producción</strong> — convierte materia prima en producto terminado: recetas con costo real y merma, control de insumos e historial de lotes</li>'
-    + '<li>📊 <strong>Libro Fiscal SENIAT</strong> — Libro de Ventas, Compras, Diario (Art.32 C.Com), Mayor analítico y Balance de Comprobación</li>'
-    + '<li>🧮 <strong>IVA e IGTF 3%</strong> calculados automáticamente en cada operación</li>'
-    + '<li>🧾 <strong>RIF de proveedores</strong> registrado en cada compra</li>'
-    + '<li>🤝 <strong>Cobros de fiados</strong> ahora quedan como evento contable</li>'
-    + '<li>📤 <strong>Exporta PDF o Excel</strong> y entrégalo a tu contador — organiza tus declaraciones sin sacar cuentas</li>'
+    + '<li>↩️ <strong>Devoluciones corregidas</strong> — la ganancia del Dashboard y Reportes ahora descuenta lo devuelto, y el stock seguía restaurándose igual que antes</li>'
+    + '<li>🧾 <strong>Reimprimir factura</strong> — el recibo (pantalla e impresora térmica) muestra solo los productos que quedaron; los devueltos aparecen anotados y con su nota de crédito</li>'
+    + '<li>💳 <strong>Fiado ahora es Crédito</strong> — mismo módulo y mismos datos, solo cambia el nombre en pantalla (más profesional para tus clientes)</li>'
+    + '<li>📊 <strong>Libro Fiscal SENIAT</strong> — Libro de Ventas, Compras, Diario (Art.32), Mayor y Balance, con PDF/Excel para tu contador</li>'
     + '<li>🔔 Notificación automática de actualizaciones</li>'
     + '</ul>'
     + '<button onclick="this.closest(\'[style*=fixed]\').remove()" class="btn btn-primary" style="width:100%;margin-top:18px;">¡Entendido!</button>'
@@ -7979,7 +8009,7 @@ function iaGenerarRespuesta(tipo, consulta) {
     var html = '<strong>📊 Resumen General del Negocio</strong><br><br>';
     html += '<strong>📦 Inventario:</strong><br>&nbsp;&nbsp;'+prods2.length+' productos | Sin stock: <span style="color:var(--danger)">'+sinStock2+'</span> | Crítico: <span style="color:var(--warn)">'+criticos2+'</span><br><br>';
     html += '<strong>💰 Ventas Hoy:</strong><br>&nbsp;&nbsp;'+hoyV3.length+' ventas — <strong style="color:var(--neon)">$'+ingHoy.toFixed(2)+'</strong> ('+((ingHoy*tasa).toFixed(0))+' Bs)<br><br>';
-    html += '<strong>👥 Clientes con fiado:</strong><br>&nbsp;&nbsp;<span style="color:var(--warn)">'+deudores2+'</span> deudores — Total: <span style="color:var(--danger)">$'+totalDC.toFixed(2)+'</span><br><br>';
+    html += '<strong>👥 Clientes con crédito:</strong><br>&nbsp;&nbsp;<span style="color:var(--warn)">'+deudores2+'</span> deudores — Total: <span style="color:var(--danger)">$'+totalDC.toFixed(2)+'</span><br><br>';
     html += '<strong>🏭 Proveedores:</strong><br>&nbsp;&nbsp;Deuda total: <span style="color:var(--danger)">$'+totalDP2.toFixed(2)+'</span><br>';
     return html;
   }
@@ -8974,7 +9004,7 @@ function fiscalCambiarTab(tab) {
 }
 
 function fiscalCuentaCobro(metodo) {
-  if (metodo === 'Fiado') return 'CUENTAS POR COBRAR';
+  if (metodo === 'Crédito') return 'CUENTAS POR COBRAR';
   if (metodo === 'Efectivo $' || metodo === 'Efectivo Bs') return 'CAJA';
   return 'BANCOS Y DIVISAS';
 }
@@ -9002,7 +9032,7 @@ function fiscalMovimientos() {
     var neto = total / factor, iva = total - neto;
     var fac = numFac[v.id] || ('A2K-' + String(v.id).slice(-6));
     var cli = v.cliente ? (nomCli[v.cliente] || '') : '';
-    grupos.push({ fecha: v.fecha, concepto: 'Venta ' + fac + (cli ? ' — ' + cli : '') + (v.metodo === 'Fiado' ? ' (fiado)' : ''), filas: [
+    grupos.push({ fecha: v.fecha, concepto: 'Venta ' + fac + (cli ? ' — ' + cli : '') + (v.metodo === 'Crédito' ? ' (crédito)' : ''), filas: [
       [fiscalCuentaCobro(v.metodo), total, 0],
       ['VENTAS', 0, neto],
       ['IVA DÉBITO FISCAL', 0, iva]
@@ -9043,7 +9073,7 @@ function fiscalMovimientos() {
   // 5) Cobros de fiados (registrados desde la actualización del Libro Fiscal)
   fiscalFiltrarPorPeriodo(DB.get('cobros_fiados') || []).forEach(function (cb) {
     var total = cb.monto || 0; if (!total) return;
-    grupos.push({ fecha: cb.fecha, concepto: 'Cobro fiado — ' + (cb.cliente || ''), filas: [
+    grupos.push({ fecha: cb.fecha, concepto: 'Cobro crédito — ' + (cb.cliente || ''), filas: [
       ['CAJA', total, 0],
       ['CUENTAS POR COBRAR', 0, total]
     ]});
@@ -9217,7 +9247,7 @@ function renderFiscalPage() {
     fiscalStatCard('var(--neonb)',  'var(--accent)',  '💵 Cobros en divisas', fMoney(t.divisas), 'efectivo $, Zelle, Binance…') +
     fiscalStatCard('var(--danger)', 'var(--accent)',  '🏦 IGTF estimado',     fMoney(t.igtf), cfg.igtf + '% sobre divisas') +
     fiscalStatCard('var(--accent)', 'var(--danger)',  '📦 Compras registradas', fMoney(t.compras), 'mercancía recibida') +
-    fiscalStatCard('var(--warning)','var(--accent)',  '🤝 Fiados por cobrar', fMoney(t.cxc), 'cuentas x cobrar') +
+    fiscalStatCard('var(--warning)','var(--accent)',  '🤝 Créditos por cobrar', fMoney(t.cxc), 'cuentas x cobrar') +
     fiscalStatCard('var(--neonb)',  'var(--success)', '🏭 Deuda proveedores', fMoney(t.cxp), 'cuentas x pagar');
 
   // Tabla por mes
@@ -9256,7 +9286,7 @@ function renderFiscalPage() {
     'El ISLR exacto lo calcula tu contador según tu régimen y gastos deducibles (compras ' + fMoney(t.compras) + ', egresos de caja ' + fMoney(t.egresos) + ').';
   document.getElementById('fiscalNotaExtra').innerHTML =
     '<strong>📚 Libros incluidos:</strong> Libro de Ventas, Libro de Compras, Libro Diario (Art. 32 Código de Comercio), Libro Mayor analítico y Balance de Comprobación — todo generado automático en las pestañas de arriba, listo para imprimir o exportar. ' +
-    '<strong>🤝 Cuentas por cobrar ' + fMoney(t.cxc) + '</strong> (fiados) y <strong>cuentas por pagar ' + fMoney(t.cxp) + '</strong> (proveedores). ' +
+    '<strong>🤝 Cuentas por cobrar ' + fMoney(t.cxc) + '</strong> (fiados → créditos) y <strong>cuentas por pagar ' + fMoney(t.cxp) + '</strong> (proveedores). ' +
     'Devoluciones del período: ' + fMoney(t.devoluciones) + '. <br><strong>⚠️ Resumen orientativo</strong> generado por Panadería Pro — ' +
     'la declaración formal la realiza tu contador con las retenciones y créditos fiscales que te correspondan.';
 
@@ -9280,7 +9310,7 @@ function fiscalExportarCSV() {
   lineas.push('Generado:;' + new Date().toLocaleString('es-VE'));
   lineas.push('');
   lineas.push('RESUMEN;;;;;;');
-  lineas.push('Ventas brutas;IVA ' + cfg.iva + '%;Ventas netas;Divisas cobradas;IGTF ' + cfg.igtf + '% estimado;Compras;Fiados por cobrar;Deuda proveedores');
+  lineas.push('Ventas brutas;IVA ' + cfg.iva + '%;Ventas netas;Divisas cobradas;IGTF ' + cfg.igtf + '% estimado;Compras;Créditos por cobrar;Deuda proveedores');
   lineas.push(
     t.bruto.toFixed(2) + ';' + t.iva.toFixed(2) + ';' + t.neto.toFixed(2) + ';' +
     t.divisas.toFixed(2) + ';' + t.igtf.toFixed(2) + ';' + t.compras.toFixed(2) + ';' +
