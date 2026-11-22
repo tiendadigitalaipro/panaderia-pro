@@ -1614,6 +1614,27 @@ body.has-banner { padding-top:38px; }
             </div>
 
             <div class="card mb-4">
+              <div class="card-title mb-3">📄 Factura (formato tipo SENIAT)</div>
+              <div style="font-size:11px;color:var(--text2);margin-bottom:10px">Estos datos salen impresos en la factura que entregas al cliente. Cada negocio llena los suyos.</div>
+              <div class="form-group"><label class="form-label">Razón social / Denominación</label><input type="text" id="fac-razon" class="form-input" placeholder="Ej: Panadería Los Cárdenas C.A."></div>
+              <div class="form-group"><label class="form-label">RIF</label><input type="text" id="fac-rif2" class="form-input" placeholder="J-12345678-9"></div>
+              <div class="form-group"><label class="form-label">Dirección fiscal</label><input type="text" id="fac-dir" class="form-input" placeholder="Calle, ciudad, estado"></div>
+              <div class="form-group"><label class="form-label">Teléfono</label><input type="text" id="fac-tel" class="form-input" placeholder="+58 412..."></div>
+              <div class="grid-2" style="gap:8px">
+                <div class="form-group"><label class="form-label">Serial del sistema</label><input type="text" id="fac-serial" class="form-input" placeholder="Ej: SYS-0001"></div>
+                <div class="form-group"><label class="form-label">Prefijo control (2 letras)</label><input type="text" id="fac-pref" class="form-input" maxlength="2" placeholder="AA"></div>
+              </div>
+              <div class="grid-2" style="gap:8px">
+                <div class="form-group"><label class="form-label">Nro. factura inicial</label><input type="number" id="fac-desde" class="form-input" min="1" placeholder="1"></div>
+                <div class="form-group"><label class="form-label">Nro. control inicial</label><input type="number" id="fac-ctrl-desde" class="form-input" min="1" placeholder="1"></div>
+              </div>
+              <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:10px;font-size:11px;color:var(--text2);margin-bottom:12px">
+                ⚖️ <strong>Aviso legal:</strong> el documento es <strong>no fiscal</strong> — usa el <em>formato</em> del modelo SENIAT pero no sustituye la designación oficial. La leyenda legal sale automática en el pie de cada factura.
+              </div>
+              <button class="btn btn-primary" onclick="saveFacturaSENIAT()">💾 Guardar datos de factura</button>
+            </div>
+
+            <div class="card mb-4">
               <div class="card-title mb-3">🌎 País y Moneda</div>
               <div class="form-group">
                 <label class="form-label">Selecciona tu País</label>
@@ -2283,8 +2304,8 @@ body.has-banner { padding-top:38px; }
 
 <script type="text/javascript">var _adminUnlocked = false;
 var _dc=function(a){return a.map(function(c){return String.fromCharCode(c);}).join('');};
-var APP_VERSION='v9.2.1';
-var APP_BUILD='20261122b';
+var APP_VERSION='v9.3';
+var APP_BUILD='20261122c';
 
 
 function selPago(metodo) {
@@ -2617,6 +2638,7 @@ window.onload = function() {
     _vs.forEach(function(v){ if (v.metodo === 'Fiado') { v.metodo = 'Crédito'; _migro = true; } });
     if (_migro) DB.set('ventas', _vs);
   } catch(e){}
+  try { facCargarConfig(); } catch(e){}
 
   // funciones expuestas en window al final del script
 
@@ -3833,11 +3855,16 @@ function showRecibo(venta) {
   btnC.textContent = 'Cerrar';
   btnC.style.cssText = 'flex:1;padding:11px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:14px';
   btnC.onclick = function(){ overlay.remove(); };
+  var btnF = document.createElement('button');
+  btnF.innerHTML = '🧾 Factura';
+  btnF.style.cssText = 'flex:2;padding:11px;border-radius:10px;border:1px solid var(--neon);background:transparent;color:var(--neon);cursor:pointer;font-size:14px;font-weight:800';
+  btnF.onclick = function(){ overlay.remove(); facturaAbrir(venta.id); };
   var btnI = document.createElement('button');
   btnI.innerHTML = 'Imprimir Ticket';
   btnI.style.cssText = 'flex:2;padding:11px;border-radius:10px;border:none;background:var(--neon);color:#000;cursor:pointer;font-size:14px;font-weight:800';
   btnI.onclick = function(){ STATE._ventaActual = venta; imprimirRecibo(); };
   footer.appendChild(btnC);
+  footer.appendChild(btnF);
   footer.appendChild(btnI);
   box.appendChild(header);
   box.appendChild(body);
@@ -5621,6 +5648,126 @@ function _siguienteNumControl() {
   return String(n).padStart(8,'0');
 }
 
+// ── FACTURA FORMATO SENIAT (documento NO fiscal, parecido al modelo oficial) ──
+function saveFacturaSENIAT(){
+  var cfg=DB.get('config')||{}; if(!cfg.factura)cfg.factura={};
+  cfg.factura.negocio=gval('fac-razon')||cfg.factura.negocio;
+  cfg.factura.rif=gval('fac-rif2');
+  cfg.factura.direccion=gval('fac-dir');
+  cfg.factura.telefono=gval('fac-tel');
+  cfg.factura.serial=gval('fac-serial');
+  cfg.factura.ctrlPrefijo=(gval('fac-pref')||'AA').toUpperCase();
+  var d1=parseInt(gval('fac-desde')); if(d1>0 && !cfg.factura.ultimaFactura) cfg.factura.ultimaFactura=d1-1;
+  var d2=parseInt(gval('fac-ctrl-desde')); if(d2>0 && cfg.factura.ultimoControl==null) cfg.factura.ultimoControl=d2-1;
+  DB.set('config',cfg);
+  showToast('Datos de factura guardados','success');
+}
+function facCargarConfig(){
+  var cfg=DB.get('config')||{}; var fc=cfg.factura||{};
+  try{
+    if(gel('fac-razon'))gel('fac-razon').value=fc.negocio||'';
+    if(gel('fac-rif2'))gel('fac-rif2').value=fc.rif||'';
+    if(gel('fac-dir'))gel('fac-dir').value=fc.direccion||'';
+    if(gel('fac-tel'))gel('fac-tel').value=fc.telefono||'';
+    if(gel('fac-serial'))gel('fac-serial').value=fc.serial||'';
+    if(gel('fac-pref'))gel('fac-pref').value=fc.ctrlPrefijo||'AA';
+  }catch(e){}
+}
+function facAsignarNumeros(v){
+  var cfg=DB.get('config')||{}; if(!cfg.factura)cfg.factura={};
+  if(v.numFactura) return;
+  cfg.factura.ultimaFactura=(cfg.factura.ultimaFactura||0)+1;
+  v.numFactura=String(cfg.factura.ultimaFactura).padStart(8,'0');
+  var pref=(cfg.factura.ctrlPrefijo||'AA').toUpperCase().replace(/[^A-Z]/g,'').slice(0,2)||'AA';
+  cfg.factura.ultimoControl=(cfg.factura.ultimoControl||0)+1;
+  v.numControl=pref+String(cfg.factura.ultimoControl).padStart(10,'0');
+  DB.set('config',cfg);
+  var ventas=DB.get('ventas')||[]; var x=ventas.find(function(y){return y.id===v.id;});
+  if(x){x.numFactura=v.numFactura;x.numControl=v.numControl;DB.set('ventas',ventas);}
+}
+function facturaAbrir(ventaId){
+  var v=(DB.get('ventas')||[]).find(function(x){return x.id===ventaId;});
+  if(!v) return;
+  facAsignarNumeros(v);
+  var wrap=document.createElement('div');
+  wrap.id='modalFacWrap'; wrap.className='modal-overlay'; wrap.style.display='flex';
+  wrap.innerHTML='<div class="modal" style="max-width:400px">'
+   +'<div class="modal-header"><span class="modal-title">🧾 Datos del comprador</span><button class="btn-close" onclick="document.getElementById(\'modalFacWrap\').remove()">✕</button></div>'
+   +'<div class="modal-body">'
+   +'<div class="form-group"><label class="form-label">Nombre o razón social</label><input type="text" id="fac-cli-nombre" class="form-input" value="'+((v.facClienteNombre||'').replace(/"/g,'&quot;'))+'" placeholder="CLIENTE VARIOS"></div>'
+   +'<div class="form-group"><label class="form-label">RIF o Cédula</label><input type="text" id="fac-cli-rif" class="form-input" value="'+((v.facClienteRif||'').replace(/"/g,'&quot;'))+'" placeholder="V-12345678"></div>'
+   +'<div style="font-size:11px;color:var(--text2)">Deja vacío para "CLIENTE VARIOS". Estos datos salen impresos en la factura junto al Nro. de control.</div>'
+   +'</div>'
+   +'<div class="modal-footer"><button class="btn btn-ghost" onclick="document.getElementById(\'modalFacWrap\').remove()">Cancelar</button>'
+   +'<button class="btn btn-primary" onclick="facturaEmitir('+v.id+')">✅ Generar factura</button></div></div>';
+  document.body.appendChild(wrap);
+}
+function facturaEmitir(ventaId){
+  var ventas=DB.get('ventas')||[];
+  var v=ventas.find(function(x){return x.id===ventaId;});
+  if(!v) return;
+  v.facClienteNombre=(gval('fac-cli-nombre')||'').trim()||'CLIENTE VARIOS';
+  v.facClienteRif=(gval('fac-cli-rif')||'').trim();
+  facAsignarNumeros(v);
+  DB.set('ventas',ventas);
+  var w=document.getElementById('modalFacWrap'); if(w)w.remove();
+  facturaVer(v);
+}
+function facturaVer(v){
+  var cfg=DB.get('config')||{}; var fc=cfg.factura||{};
+  var cfgIva=(cfg.iva!=null?cfg.iva:16), cfgIgtf=(cfg.igtf!=null?cfg.igtf:3);
+  var factor=1+cfgIva/100;
+  var total=v.totalUSD||0;
+  var base=total/factor, iva=total-base;
+  var esDiv=(typeof FISCAL_METODOS_DIVISAS!=='undefined')&&FISCAL_METODOS_DIVISAS.indexOf(v.metodo)>=0;
+  var igtf=esDiv?total*cfgIgtf/100:0;
+  var granTotal=total+igtf;
+  var _dq={}; (v.itemsDevueltos||[]).forEach(function(d){_dq[d.productoId]=(_dq[d.productoId]||0)+d.qty;});
+  var rows=(v.items||[]).map(function(it,i){
+    var qd=_dq[it.productoId]||0, qm=it.qty-qd; if(qm<=0)return '';
+    var sm=it.precio*qm;
+    return '<tr><td style="text-align:center">'+(i+1)+'</td><td>'+it.nombre+(qd>0?' <em>(-'+qd+' dev.)</em>':'')+'</td>'
+      +'<td style="text-align:center">'+qm+'</td><td style="text-align:right">'+(it.precio||0).toFixed(2)+'</td>'
+      +'<td style="text-align:right">'+sm.toFixed(2)+'</td></tr>';
+  }).join('')||'<tr><td colspan="5" style="text-align:center">(todos los productos fueron devueltos)</td></tr>';
+  var fecha=new Date(v.fecha).toLocaleString('es-VE');
+  var html='<!DOCTYPE html><html><head><meta charset="utf-8"><title>Factura '+v.numFactura+'</title>'
+   +'<style>body{font-family:Arial,Helvetica,sans-serif;color:#000;margin:0;padding:24px}'
+   +'.doc{max-width:720px;margin:0 auto;border:2px solid #000;padding:22px}'
+   +'table{width:100%;border-collapse:collapse;font-size:12px}'
+   +'th,td{border:1px solid #000;padding:4px 6px}'
+   +'th{background:#eee}.tot td{border:none;padding:2px 6px}'
+   +'.c{text-align:center}.b{font-weight:700}.box{border:1px solid #000;padding:6px 8px;margin:8px 0;font-size:12px}'
+   +'@media print{body{padding:0}.no-print{display:none}}'
+   +'</style></head><body>'
+   +'<div class="doc">'
+   +(fc.logo?'<div class="c"><img src="'+fc.logo+'" style="max-width:90px;max-height:60px"></div>':'')
+   +'<div class="c b" style="font-size:16px;letter-spacing:1px">'+String(fc.negocio||'MI NEGOCIO').toUpperCase()+'</div>'
+   +'<div class="c" style="font-size:12px">RIF: '+(fc.rif||'—')+'</div>'
+   +'<div class="c" style="font-size:11px">'+String(fc.direccion||'')+(fc.telefono?' · Tlf: '+fc.telefono:'')+'</div>'
+   +'<div style="display:flex;justify-content:space-between;margin-top:10px;font-size:12px">'
+   +'<div><div class="b" style="font-size:15px">FACTURA</div><div>Nro: '+(v.numFactura||'—')+'</div><div>Fecha: '+fecha+'</div></div>'
+   +'<div style="text-align:right"><div>Nro. de Control: <span class="b">'+(v.numControl||'—')+'</span></div><div>Serial: '+(fc.serial||'—')+'</div></div>'
+   +'</div>'
+   +'<div class="box"><span class="b">Cliente:</span> '+String(v.facClienteNombre||'CLIENTE VARIOS').replace(/</g,'&lt;')+' &nbsp;·&nbsp; <span class="b">RIF/C.I.:</span> '+String(v.facClienteRif||'N/D').replace(/</g,'&lt;')+'</div>'
+   +'<table><thead><tr><th style="width:26px">#</th><th>Descripción</th><th style="width:50px">Cant.</th><th style="width:70px">P. Unit $</th><th style="width:80px">Total $</th></tr></thead><tbody>'+rows+'</tbody></table>'
+   +'<table class="tot" style="margin-top:8px"><tbody>'
+   +'<tr><td class="b" style="text-align:right">Base Imponible:</td><td style="text-align:right;width:110px">$'+base.toFixed(2)+'</td></tr>'
+   +'<tr><td class="b" style="text-align:right">IVA ('+cfgIva+'%):</td><td style="text-align:right">$'+iva.toFixed(2)+'</td></tr>'
+   +(igtf>0?'<tr><td class="b" style="text-align:right">IGTF ('+cfgIgtf+'%):</td><td style="text-align:right">$'+igtf.toFixed(2)+'</td></tr>':'')
+   +'<tr><td class="b" style="text-align:right;font-size:14px">TOTAL A PAGAR:</td><td class="b" style="text-align:right;font-size:14px">$'+granTotal.toFixed(2)+'</td></tr>'
+   +'</tbody></table>'
+   +(v.itemsDevueltos&&v.itemsDevueltos.length?'<div style="font-size:11px;margin-top:4px">Devuelto: '+v.itemsDevueltos.map(function(d){return d.qty+'x '+d.nombre;}).join(' · ')+'</div>':'')
+   +'<div class="box" style="margin-top:10px;font-size:10px">⚖️ <b>Documento de venta emitido por sistema no designado.</b> No constituye comprobante fiscal ni da derecho a crédito fiscal ante el SENIAT.</div>'
+   +'<div class="c" style="font-size:11px;margin-top:6px">'+(fc.mensajePie||'Gracias por su compra!')+'</div>'
+   +'</div>'
+   +'<div class="no-print c" style="margin-top:14px"><button onclick="window.print()" style="padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer">🖨 Imprimir / PDF</button></div>'
+   +'</body></html>';
+  var win=window.open('','_blank');
+  if(win){ win.document.write(html); win.document.close(); }
+  else showToast('Permite las ventanas emergentes para ver la factura','warn');
+}
+
 // ── QA SUITE ──
 function qaRun() {
   var tests=[]; var passed=0; var failed=0;
@@ -7196,6 +7343,9 @@ window.resetearTodo = resetearTodo;
 window.saveCliente = saveCliente;
 window.saveConfig = saveConfig;
 window.saveFacturaConfig = saveFacturaConfig;
+window.saveFacturaSENIAT = saveFacturaSENIAT;
+window.facturaAbrir = facturaAbrir;
+window.facturaEmitir = facturaEmitir;
 window.saveLicenses = saveLicenses;
 window.savePayMethods = savePayMethods;
 window.saveProduct = saveProduct;
@@ -7779,10 +7929,10 @@ function checkVersionUpdate() {
   var banner = document.createElement('div');
   banner.id = 'update-banner';
   var novedades = [
-    '↩️ Devoluciones corregidas: la ganancia y el recibo ahora descuentan lo devuelto',
-    '🧾 Reimprimir factura muestra solo los productos que quedaron',
-    '💳 El módulo Fiado ahora se llama Crédito (mismo funcionamiento)',
-    '📊 Libro Fiscal SENIAT disponible en Finanzas'
+    '🧾 FACTURA con formato tipo SENIAT — RIF, Nro. de control y desglose de IVA',
+    '⚙️ Configura tus datos fiscales en Configuración → Factura',
+    '↩️ Devoluciones corregidas: ganancia y recibo descuentan lo devuelto',
+    '💳 El módulo Fiado ahora se llama Crédito'
   ].map(function(n){ return '<li>'+n+'</li>'; }).join('');
   banner.innerHTML = '<span style="display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap;">'
     + '<strong>🚀 Panadería Pro '+APP_VERSION+' instalado</strong>'
@@ -7804,10 +7954,11 @@ function iaVerNovedades() {
     + '<button onclick="this.closest(\'[style*=fixed]\').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text2)">✕</button>'
     + '</div>'
     + '<ul style="margin:0;padding-left:20px;line-height:2.2;font-size:13px;color:var(--text1)">'
-    + '<li>↩️ <strong>Devoluciones corregidas</strong> — la ganancia del Dashboard y Reportes ahora descuenta lo devuelto, y el stock seguía restaurándose igual que antes</li>'
-    + '<li>🧾 <strong>Reimprimir factura</strong> — el recibo (pantalla e impresora térmica) muestra solo los productos que quedaron; los devueltos aparecen anotados y con su nota de crédito</li>'
-    + '<li>💳 <strong>Fiado ahora es Crédito</strong> — mismo módulo y mismos datos, solo cambia el nombre en pantalla (más profesional para tus clientes)</li>'
-    + '<li>📊 <strong>Libro Fiscal SENIAT</strong> — Libro de Ventas, Compras, Diario (Art.32), Mayor y Balance, con PDF/Excel para tu contador</li>'
+    + '<li>🧾 <strong>Factura con formato tipo SENIAT</strong> — razón social, RIF, Nro. de factura, Nro. de control (AA##########), serial, datos del comprador y desglose de IVA e IGTF. Botón "🧾 Factura" en cualquier recibo</li>'
+    + '<li>⚙️ <strong>Configura tus datos</strong> en Configuración → "Factura (formato tipo SENIAT)" — cada negocio pone los suyos y sale impreso en el documento</li>'
+    + '<li>⚖️ <strong>Leyenda legal automática</strong> en el pie: documento no fiscal, protección para tu negocio</li>'
+    + '<li>↩️ <strong>Devoluciones corregidas</strong> — la ganancia descuenta lo devuelto y el recibo muestra solo lo que quedó</li>'
+    + '<li>💳 <strong>Fiado ahora es Crédito</strong> — mismo módulo, nombre más profesional</li>'
     + '<li>🔔 Notificación automática de actualizaciones</li>'
     + '</ul>'
     + '<button onclick="this.closest(\'[style*=fixed]\').remove()" class="btn btn-primary" style="width:100%;margin-top:18px;">¡Entendido!</button>'
